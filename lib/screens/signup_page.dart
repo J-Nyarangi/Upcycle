@@ -1,6 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'login_page.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -31,7 +33,31 @@ class _SignUpPageState extends State<SignUpPage> {
     });
 
     try {
-      await _auth.createUserWithEmailAndPassword(email: _email!, password: _password!);
+      // Create the user
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: _email!,
+        password: _password!,
+      );
+
+      // Send email verification
+      await userCredential.user!.sendEmailVerification();
+
+      // Sign out the user to enforce email verification
+      await _auth.signOut();
+
+      // Show a success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Verification email sent! Please check your inbox.'),
+          backgroundColor: Colors.green[700],
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      );
+
+      // Navigate to LoginPage
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
     } on FirebaseAuthException catch (e) {
       setState(() {
@@ -71,9 +97,11 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   SizedBox(height: 12),
-                  Text('Create your account to start transforming waste into wonder', style: TextStyle(fontSize: 16, color: Colors.grey[700])),
+                  Text(
+                    'Create your account to start transforming waste into wonder',
+                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                  ),
                   SizedBox(height: 40),
-                  
                   // Email field
                   _buildTextField(
                     icon: Icons.email_outlined,
@@ -82,7 +110,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     validator: (value) => value!.contains('@') ? null : 'Enter a valid email',
                   ),
                   SizedBox(height: 20),
-
                   // Password field
                   _buildTextField(
                     icon: Icons.lock_outline,
@@ -92,11 +119,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     validator: (value) => value!.length >= 6 ? null : 'Minimum 6 characters',
                   ),
                   SizedBox(height: 24),
-
                   // Terms checkbox
                   _buildTermsCheckbox(),
                   SizedBox(height: 20),
-
                   // Error message
                   if (_errorMessage != null)
                     Padding(
@@ -106,7 +131,6 @@ class _SignUpPageState extends State<SignUpPage> {
                         style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
                       ),
                     ),
-
                   // Sign Up button
                   AnimatedContainer(
                     duration: Duration(milliseconds: 200),
@@ -122,11 +146,13 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       child: _isLoading
                           ? CircularProgressIndicator(color: Colors.white)
-                          : Text('Get Started', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white)),
+                          : Text(
+                              'Get Started',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+                            ),
                     ),
                   ),
                   SizedBox(height: 25),
-
                   // Login link
                   Center(
                     child: GestureDetector(
@@ -138,7 +164,10 @@ class _SignUpPageState extends State<SignUpPage> {
                           children: [
                             TextSpan(
                               text: 'Log In',
-                              style: TextStyle(color: Colors.green[800], fontWeight: FontWeight.w600, decoration: TextDecoration.underline),
+                              style: TextStyle(
+                                  color: Colors.green[800],
+                                  fontWeight: FontWeight.w600,
+                                  decoration: TextDecoration.underline),
                             ),
                           ],
                         ),
@@ -173,7 +202,8 @@ class _SignUpPageState extends State<SignUpPage> {
         filled: true,
         fillColor: Colors.white,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.green[800]!, width: 1.5)),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.green[800]!, width: 1.5)),
         contentPadding: EdgeInsets.symmetric(vertical: 18, horizontal: 20),
         floatingLabelBehavior: FloatingLabelBehavior.never,
       ),
@@ -199,9 +229,39 @@ class _SignUpPageState extends State<SignUpPage> {
                 text: 'By creating an account, I agree to the ',
                 style: TextStyle(color: Colors.grey[700], fontSize: 14),
                 children: [
-                  TextSpan(text: 'Terms of Service', style: TextStyle(color: Colors.green[800], fontWeight: FontWeight.w600, decoration: TextDecoration.underline)),
+                  TextSpan(
+                    text: 'Terms of Service',
+                    style: TextStyle(
+                        color: Colors.green[800], fontWeight: FontWeight.w600, decoration: TextDecoration.underline),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () async {
+                        const url = 'https://yourwebsite.com/terms'; // Replace with your actual URL
+                        if (await canLaunchUrl(Uri.parse(url))) {
+                          await launchUrl(Uri.parse(url));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Could not open Terms of Service')),
+                          );
+                        }
+                      },
+                  ),
                   TextSpan(text: ' and '),
-                  TextSpan(text: 'Privacy Policy', style: TextStyle(color: Colors.green[800], fontWeight: FontWeight.w600, decoration: TextDecoration.underline)),
+                  TextSpan(
+                    text: 'Privacy Policy',
+                    style: TextStyle(
+                        color: Colors.green[800], fontWeight: FontWeight.w600, decoration: TextDecoration.underline),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () async {
+                        const url = 'https://yourwebsite.com/privacy'; // Replace with your actual URL
+                        if (await canLaunchUrl(Uri.parse(url))) {
+                          await launchUrl(Uri.parse(url));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Could not open Privacy Policy')),
+                          );
+                        }
+                      },
+                  ),
                 ],
               ),
             ),

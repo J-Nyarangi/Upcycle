@@ -43,6 +43,41 @@ class _LoginPageState extends State<LoginPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: const Text('Please verify your email before logging in.'),
+              action: SnackBarAction(
+                label: 'Resend Email',
+                onPressed: () async {
+                  try {
+                    // Re-authenticate the user to resend the verification email
+                    await _auth.signInWithEmailAndPassword(
+                      email: _emailController.text.trim(),
+                      password: _passwordController.text.trim(),
+                    );
+                    await userCredential.user!.sendEmailVerification();
+                    await _auth.signOut();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text('Verification email resent.'),
+                        backgroundColor: Colors.green[700],
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text('Failed to resend verification email.'),
+                        backgroundColor: Colors.red[700],
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
               backgroundColor: Colors.red[700],
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(

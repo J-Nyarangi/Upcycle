@@ -10,7 +10,8 @@ import 'screens/marketplace_page.dart';
 import 'screens/upload_project_page.dart';
 import 'screens/learning_page.dart';
 import 'screens/cart_screen.dart'; 
-import 'screens/cart_provider.dart'; 
+import 'screens/cart_provider.dart';
+import 'screens/orders_screen.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); 
@@ -67,6 +68,7 @@ class MyApp extends StatelessWidget {
         '/upload_project': (context) => UploadProjectPage(),
         '/learning': (context) => LearningPage(),
         '/cart': (context) => CartScreen(), 
+        '/orders': (context) => OrdersScreen(),
       },
     );
   }

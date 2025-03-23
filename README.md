@@ -1,6 +1,6 @@
 # Upcycle
 
-<img src="/api/placeholder/200/200" alt="Upcycle Logo" />
+<img src="https://raw.githubusercontent.com/J-Nyarangi/Upcycle/main/assets/icons/recycle_icon.png" alt="Upcycle Icon" width="200" height="200"/>
 
 ## Transform Waste Into Treasure
 
@@ -18,21 +18,26 @@ Receive AI-generated upcycling suggestions tailored to the items you've scanned,
 Follow step-by-step guides to transform waste into unique creations. Document your process and share your finished projects to inspire the community.
 
 ### 🛒 Buy & Sell
-List your upcycled creations in the in-app marketplace or browse items crafted by other community members. Support sustainable creativity and discover one-of-a-kind handcrafted items.
+List your upcycled creations in the in-app marketplace or browse items crafted by other community members. Support sustainable creativity and discover one-of-a-kind handcrafted items with secure transactions powered by M-Pesa payment integration.
+
+## Download
+
+[Download Upcycle APK](https://github.com/J-Nyarangi/Upcycle/releases/tag/v1.0.0)
+
+> **Note:** If you prefer not to set up the development environment, you can simply download and install the APK file using the link above to try out the app.
 
 ## Getting Started
 
 ### Prerequisites
-- Flutter SDK (2.10.0 or higher)
-- Dart (2.16.0 or higher)
-- Android Studio / Xcode
-- Firebase account (for authentication and database)
+* Flutter SDK (2.10.0 or higher)
+* Dart (2.16.0 or higher)
+* Android Studio / Xcode
+* Firebase account (for authentication and database)
 
 ### Installation
-
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/upcycle.git
+git clone https://github.com/J-Nyarangi/upcycle.git
 ```
 
 2. Navigate to the project directory:
@@ -45,39 +50,26 @@ cd upcycle
 flutter pub get
 ```
 
-4. Configure Firebase:
-   - Create a new Firebase project
-   - Add Android and iOS apps to your Firebase project
-   - Download and add the configuration files to your Flutter project
-   - Enable Authentication, Firestore, and Storage
+### API Key Setup
+This project uses external APIs (Google Vision, Firebase) that require API keys. These keys are not included in the repository for security reasons. To run the app:
+
+1. Create an `assets/.env` file in the project root with the following structure:
+```
+GOOGLE_VISION_API_KEY=your_google_vision_api_key
+FIREBASE_API_KEY=your_firebase_api_key
+```
+
+2. Obtain your own API keys:
+   - **Google Vision**: Enable the API in [Google Cloud Console](https://console.cloud.google.com/).
+   - **Firebase**: Set up a project in [Firebase Console](https://console.firebase.google.com/).
+
+3. Place Firebase config files (`google-services.json` for Android, `GoogleService-Info.plist` for iOS) in their respective directories.
+
+4. Run `flutter pub get` to ensure dependencies are installed.
 
 5. Run the app:
 ```bash
 flutter run
-```
-
-## Project Structure
-
-```
-lib/
-├── main.dart                  # Application entry point
-├── config/                    # Configuration files
-├── models/                    # Data models
-├── screens/                   # UI screens
-│   ├── authentication/        # Login and registration
-│   ├── scan/                  # Waste scanning feature
-│   ├── ideas/                 # AI suggestions
-│   ├── create/                # Project creation
-│   ├── community/             # Social feed
-│   ├── marketplace/           # Buy and sell
-│   └── rewards/               # Challenges and rewards
-├── services/                  # Business logic
-│   ├── auth_service.dart      # Authentication
-│   ├── ai_service.dart        # AI suggestions
-│   ├── storage_service.dart   # Cloud storage
-│   └── marketplace_service.dart # Marketplace functions
-├── widgets/                   # Reusable UI components
-└── utils/                     # Helper functions
 ```
 
 ## Technical Implementation
@@ -91,27 +83,13 @@ Our backend leverages GPT-based models to generate creative upcycling ideas base
 ### Real-time Updates
 Firebase Firestore provides real-time synchronization for the community feed and marketplace listings.
 
-### Offline Access
-Local storage (Room for Android and Core Data for iOS) caches projects and user preferences for offline use.
-
-## Contributing
-
-We welcome contributions to Upcycle! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) file for details on how to get involved.
-
-## Privacy
-
-Upcycle values user privacy. Images captured during scanning are processed locally on the device unless explicitly shared with the community. See our [PRIVACY.md](PRIVACY.md) for complete details.
-
 ## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the MIT License - see the `LICENSE.md` file for details.
 
 ## Contact
-
 For support or inquiries, reach out to us at:
-- Email: support@upcycle.app
+* Email: nyandukonyarangi@gmail.com
 
 ---
 
-Made with 💚 for a sustainable future.
-
+*Made with 💚 for a sustainable future.*

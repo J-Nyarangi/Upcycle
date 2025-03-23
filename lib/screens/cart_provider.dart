@@ -5,37 +5,40 @@ class CartProvider with ChangeNotifier {
 
   List<Map<String, dynamic>> get cartItems => _cartItems;
 
-  void addToCart(Map<String, dynamic> item) {
-    int existingIndex = _cartItems.indexWhere((element) => element['id'] == item['id']);
-    if (existingIndex >= 0) {
-      _cartItems[existingIndex]['quantity']++;
+  void addToCart(Map<String, dynamic> item) { // Fixed syntax: removed extra '>'
+    final existingItemIndex = _cartItems.indexWhere((cartItem) => cartItem['id'] == item['id']);
+    if (existingItemIndex != -1) {
+      _cartItems[existingItemIndex]['quantity'] += 1;
     } else {
-      Map<String, dynamic> newItem = Map.from(item);
-      newItem['quantity'] = 1;
-      _cartItems.add(newItem);
+      _cartItems.add({...item, 'quantity': 1});
     }
-    notifyListeners();
-  }
-
-  void removeFromCart(String id) {
-    _cartItems.removeWhere((item) => item['id'] == id);
+    print('Item added to cart. Cart items: $_cartItems');
     notifyListeners();
   }
 
   void updateQuantity(String id, int newQuantity) {
-    if (newQuantity <= 0) {
-      removeFromCart(id);
-      return;
+    final itemIndex = _cartItems.indexWhere((item) => item['id'] == id);
+    if (itemIndex != -1) {
+      if (newQuantity <= 0) {
+        _cartItems.removeAt(itemIndex);
+      } else {
+        _cartItems[itemIndex]['quantity'] = newQuantity;
+      }
+      print('Quantity updated for item $id. Cart items: $_cartItems');
+      notifyListeners();
     }
-    int index = _cartItems.indexWhere((item) => item['id'] == id);
-    if (index >= 0) {
-      _cartItems[index]['quantity'] = newQuantity;
-    }
+  }
+
+  void removeFromCart(String id) {
+    _cartItems.removeWhere((item) => item['id'] == id);
+    print('Item $id removed from cart. Cart items: $_cartItems');
     notifyListeners();
   }
 
   void clearCart() {
-    _cartItems.clear();
+    print('Clearing cart. Before: $_cartItems');
+    _cartItems = [];
+    print('Cart cleared. After: $_cartItems');
     notifyListeners();
   }
 }
